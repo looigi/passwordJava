@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Password</string>
+    <string name="toast_crash_report">Errore in Password</string>
+</resources>
