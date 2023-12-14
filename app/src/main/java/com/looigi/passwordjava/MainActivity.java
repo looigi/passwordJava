@@ -6,6 +6,7 @@ import android.content.Context;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -190,6 +191,16 @@ public class MainActivity extends Activity {
             }
         };
         handlerAgg.postDelayed(rAgg, 3000);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            Log.getInstance().ScriveLog("Premuto uscita");
+            finish();
+            System.exit(1);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void ContinuaEsecuzione() {
