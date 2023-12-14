@@ -141,31 +141,36 @@ public class db_dati {
         try {
             int id = -1;
 
-            String SQL = "SELECT Max(idRiga) FROM Password";
-            Cursor c = myDB.rawQuery(SQL, null);
-            c.moveToFirst();
-            if (c.getCount() > 0) {
-                id = c.getInt(0);
-
-                SQL = "Insert Into Password Values(" +
-                        "'" + VariabiliGlobali.getInstance().getIdUtente() + "', " +
-                        "'" + id + "', " +
-                        "'" + s.getSito().replace("'", "''") + "', " +
-                        "'" + s.getUtenza().replace("'", "''") + "', " +
-                        "'" + s.getPassword().replace("'", "''") + "', " +
-                        "'" + s.getNote().replace("'", "''") + "', " +
-                        "'" + s.getIndirizzo().replace("'", "''") + "' " +
-                        ")";
-                myDB.execSQL(SQL);
-
-                if (AggiungeOnLine) {
-                    ChiamateWS ws = new ChiamateWS();
-                    ws.ScriveNuovaPassword(s);
+            if (!VariabiliGlobali.getInstance().isDeveAggiungereRigheAlDb()) {
+                String SQL = "SELECT Max(idRiga) + 1 FROM Password";
+                Cursor c = myDB.rawQuery(SQL, null);
+                c.moveToFirst();
+                if (c.getCount() > 0) {
+                    id = c.getInt(0);
+                } else {
+                    String Messaggio = "ERRORE Nel rilevamento dell'id della password";
+                    Log.getInstance().ScriveLog(Messaggio);
+                    Utility.getInstance().VisualizzaMessaggio(Messaggio);
+                    return;
                 }
             } else {
-                String Messaggio = "ERRORE Nel salvataggio della password: Id Riga non rilevato";
-                Log.getInstance().ScriveLog(Messaggio);
-                Utility.getInstance().VisualizzaMessaggio(Messaggio);
+                id = s.getIdRiga();
+            }
+
+            String SQL = "Insert Into Password Values(" +
+                    "'" + VariabiliGlobali.getInstance().getIdUtente() + "', " +
+                    "'" + id + "', " +
+                    "'" + s.getSito().replace("'", "''") + "', " +
+                    "'" + s.getUtenza().replace("'", "''") + "', " +
+                    "'" + s.getPassword().replace("'", "''") + "', " +
+                    "'" + s.getNote().replace("'", "''") + "', " +
+                    "'" + s.getIndirizzo().replace("'", "''") + "' " +
+                    ")";
+            myDB.execSQL(SQL);
+
+            if (AggiungeOnLine) {
+                ChiamateWS ws = new ChiamateWS();
+                ws.ScriveNuovaPassword(s);
             }
         } catch (Exception e) {
             String Messaggio = "ERRORE Nel salvataggio della password: " + Utility.getInstance().PrendeErroreDaException(e);
