@@ -90,15 +90,20 @@ public class MainActivity extends Activity {
         ImageView layRicerca = (ImageView) findViewById(R.id.imgRicerca);
         layRicerca.setVisibility(LinearLayout.GONE);
 
+        EditText edtUtente = (EditText) findViewById(R.id.edtUtenteLogin);
+        EditText edtPassword = (EditText) findViewById(R.id.edtPasswordLogin);
+
         boolean utenza = db.LeggeUtente();
-        // utenza = false;
+        if (utenza) {
+            edtUtente.setText(VariabiliGlobali.getInstance().getUtenteAttuale().getNick());
+        } else {
+            edtUtente.setText("");
+        }
+        utenza = false;
 
         if (!utenza) {
             // Non esiste l'utente sul db
             laySceltaPWD.setVisibility(LinearLayout.VISIBLE);
-
-            EditText edtUtente = (EditText) findViewById(R.id.edtUtenteLogin);
-            EditText edtPassword = (EditText) findViewById(R.id.edtPasswordLogin);
 
             ImageView imgLogin = (ImageView) findViewById(R.id.imgLogin);
             imgLogin.setOnClickListener(new View.OnClickListener() {
